@@ -1,5 +1,6 @@
 from functools import reduce
 
+
 class Bet:
     
     def __init__(self, stakes=1, odds=[1], ew=True, ewterms=[0.25], winner=[True]):
