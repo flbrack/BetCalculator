@@ -35,9 +35,10 @@ class BetCalculator:
         self.odds = StringVar()
         Entry(master, width=10, textvariable = self.odds, justify = RIGHT).grid(row=2, column=2)
 
+
         self.ewinput = IntVar()
-        r1 = Radiobutton(master, variable=self.ewinput, value=True, justify=RIGHT).grid(row=1, column=4)
-        r2 = Radiobutton(master, variable=self.ewinput, value=False, justify=RIGHT).grid(row=1, column=5)
+        r1 = Radiobutton(master, variable=self.ewinput, value=True, justify=RIGHT).grid(row=1,column=4,sticky=W)
+        r2 = Radiobutton(master, variable=self.ewinput, value=False, justify=RIGHT).grid(row=1,column=4,sticky=E)
 
         self.ewterms = StringVar()
         Entry(master, width=10, textvariable = self.ewterms, justify=RIGHT).grid(row=2, column=4)
