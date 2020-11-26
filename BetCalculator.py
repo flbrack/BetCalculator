@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from BetTypes import *
 
 
@@ -20,14 +21,29 @@ class BetCalculator:
 
 
         Label(self.topframe,justify=LEFT, text = "Stake").grid(row=0, column = 0, sticky=W)
-        Label(self.topframe, text = "Each-Way").grid(row=0, column = 2)
         
         self.stakeinput = StringVar()
         Entry(self.topframe, width=10, textvariable = self.stakeinput, justify=LEFT).grid(row=0, column=1)
 
+        Label(self.topframe, text = "Each-Way").grid(row=0, column = 2)
+
         self.ewinput = IntVar()
         r1 = Radiobutton(self.topframe, text="Yes", variable=self.ewinput, value=True).grid(row=0,column=3)
         r2 = Radiobutton(self.topframe, text="No",variable=self.ewinput, value=False).grid(row=0,column=4)
+
+        Label(self.topframe, text="Bet Type").grid(row=1,column=0)
+
+        self.bettype = StringVar()
+        choices = ["Single/Accum", "Lucky 15 Type", "Yankee Type"]
+        self.bettype.set("Pick an option")
+        ttk.Combobox(self.topframe, width=10 ,textvariable=self.bettype, values=choices, state='readonly').grid(row=1,column=1)
+
+        Label(self.topframe, text="Number of Selections").grid(row=1, column=2)
+
+        self.selections = StringVar()
+        selectchoices = [str(i) for i in range(1,9)]
+        ttk.Combobox(self.topframe, width=10, values=selectchoices, state="readonly").grid(row=1, column=3)
+
 
         #----------Middle Frame
         self.midframe = Frame(master)
