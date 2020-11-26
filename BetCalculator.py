@@ -12,55 +12,64 @@ class BetCalculator:
     #Step 2 and 3: create the first method
     def __init__(self, master):
 
-        '''
-        DOCSTRING: Define what to do on initialization
-        '''
-
-        #Step 4: Assign reference to the main window of the application
         self.master = master
-
-        #Step 4: Add a name to our application
         master.title("Bet Calculator")
 
-        Label(master, text = "Stake").grid(row=1, column = 1)
-        Label(master, text = "Odds").grid(row=2, column = 1)
-        Label(master, text = "Each-Way").grid(row=1, column = 3)
-        Label(master, text = "E/W Terms").grid(row = 2, column = 3)
-        Label(master, text = "Total Stake").grid(row=3, column=1)
-        Label(master, text = "Payout").grid(row=3, column=3)
+        #----------Top Frame
+        self.topframe = Frame(master)
 
+
+        Label(self.topframe,justify=LEFT, text = "Stake").grid(row=0, column = 0, sticky=W)
+        Label(self.topframe, text = "Each-Way").grid(row=0, column = 2)
+        
         self.stakeinput = StringVar()
-        Entry(master, width=10, textvariable = self.stakeinput, justify=RIGHT).grid(row=1, column=2)
-
-        self.odds = StringVar()
-        Entry(master, width=10, textvariable = self.odds, justify = RIGHT).grid(row=2, column=2)
-
+        Entry(self.topframe, width=10, textvariable = self.stakeinput, justify=LEFT).grid(row=0, column=1)
 
         self.ewinput = IntVar()
-        r1 = Radiobutton(master, variable=self.ewinput, value=True, justify=RIGHT).grid(row=1,column=4,sticky=W)
-        r2 = Radiobutton(master, variable=self.ewinput, value=False, justify=RIGHT).grid(row=1,column=4,sticky=E)
+        r1 = Radiobutton(self.topframe, text="Yes", variable=self.ewinput, value=True).grid(row=0,column=3)
+        r2 = Radiobutton(self.topframe, text="No",variable=self.ewinput, value=False).grid(row=0,column=4)
 
+        #----------Middle Frame
+        self.midframe = Frame(master)
+
+        Label(self.midframe, text = "Odds").grid(row=0, column = 0)
+        Label(self.midframe, text = "E/W Terms").grid(row = 0, column = 2)
+        
+        self.odds = StringVar()
+        Entry(self.midframe, width=10, textvariable = self.odds, justify = RIGHT).grid(row=0, column=1)
+        
         self.ewterms = StringVar()
-        Entry(master, width=10, textvariable = self.ewterms, justify=RIGHT).grid(row=2, column=4)
+        Entry(self.midframe, width=10, textvariable = self.ewterms, justify=RIGHT).grid(row=0, column=3)
+
+        #----------Bottom Frame
+        self.bottomframe = Frame(master)
+
+        Label(self.bottomframe, text = "Total Stake").grid(row=1, column=0)
+        Label(self.bottomframe, text = "Payout").grid(row=1, column=2)
 
         self.totalstakes = StringVar()
-        lblTotalStakes = Label(master, textvariable=self.totalstakes).grid(row=3, column=2)
+        lblTotalStakes = Label(self.bottomframe, width=10, textvariable=self.totalstakes).grid(row=1, column=1)
 
         self.payout = StringVar()
-        lblPayout = Label(master, textvariable=self.payout).grid(row=3, column=4)
+        lblPayout = Label(self.bottomframe,width=10, textvariable=self.payout).grid(row=1, column=3)
 
+        btComputeStakes = Button(self.bottomframe, text = "Compute Payout", command=self.computePayout).grid(row=0, column = 0,columnspan=2)
+
+        
+
+        self.topframe.pack(side=TOP)
+        self.midframe.pack()
+        self.bottomframe.pack(side=BOTTOM)
+
+        master.grid_rowconfigure(1, weight=1)
+        master.grid_columnconfigure(1, weight=1)
         #self.totalstakes.set('100')
         #self.payout.set('1000')
-
-
-
-        btComputeStakes = Button(master, text = "Compute Payout", command=self.computePayout).grid(row=4, column = 4)
-
 
     def computePayout(self):
         
         
-        bet = Accum(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())])
+        bet = Accum(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[True])
         self.totalstakes.set(bet.totalstakes())
         self.payout.set(bet.payout())
 
