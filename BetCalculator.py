@@ -6,11 +6,7 @@ from BetTypes import *
 
 #Create a bet calculator class
 class BetCalculator:
-
-
-
-
-    #Step 2 and 3: create the first method
+    
     def __init__(self, master):
 
         self.master = master
@@ -38,24 +34,32 @@ class BetCalculator:
         self.bettype.set("Pick an option")
         ttk.Combobox(self.topframe, width=10 ,textvariable=self.bettype, values=choices, state='readonly').grid(row=1,column=1)
 
-        Label(self.topframe, text="Number of Selections").grid(row=1, column=2)
+        Label(self.topframe, text="No. of Selections").grid(row=1, column=2)
 
         self.selections = StringVar()
         selectchoices = [str(i) for i in range(1,9)]
-        ttk.Combobox(self.topframe, width=10, values=selectchoices, state="readonly").grid(row=1, column=3)
+        ttk.Combobox(self.topframe, width=3, values=selectchoices, state="readonly").grid(row=1, column=3)
 
 
         #----------Middle Frame
         self.midframe = Frame(master)
 
-        Label(self.midframe, text = "Odds").grid(row=0, column = 0)
-        Label(self.midframe, text = "E/W Terms").grid(row = 0, column = 2)
+        Label(self.midframe, text="Odds").grid(row=0, column = 0)
         
         self.odds = StringVar()
-        Entry(self.midframe, width=10, textvariable = self.odds, justify = RIGHT).grid(row=0, column=1)
+        Entry(self.midframe, width=5, textvariable = self.odds, justify = RIGHT).grid(row=0, column=1)
         
+        Label(self.midframe, text="E/W Terms").grid(row = 0, column = 2)
+
         self.ewterms = StringVar()
-        Entry(self.midframe, width=10, textvariable = self.ewterms, justify=RIGHT).grid(row=0, column=3)
+        Entry(self.midframe, width=5, textvariable = self.ewterms, justify=RIGHT).grid(row=0, column=3)
+
+        Label(self.midframe, text="Win?").grid(row=0, column=4)
+
+        self.win = StringVar()
+        winplace = ["Win", "Place"]
+        ttk.Combobox(self.midframe, width=5, values=winplace, textvariable=self.win, state="readonly").grid(row=0, column=5)
+
 
         #----------Bottom Frame
         self.bottomframe = Frame(master)
@@ -77,15 +81,25 @@ class BetCalculator:
         self.midframe.pack()
         self.bottomframe.pack(side=BOTTOM)
 
-        master.grid_rowconfigure(1, weight=1)
-        master.grid_columnconfigure(1, weight=1)
-        #self.totalstakes.set('100')
-        #self.payout.set('1000')
+        master.grid_rowconfigure(0, weight=1)
+        master.grid_columnconfigure(0, weight=1)
+        
+        
+    #def Create Midframes(self):
+
 
     def computePayout(self):
+        wins = {"Win":True,"Place":False}
+
+        if self.bettype.get()=="Single/Accum":
+            bet = Accum(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]])
         
-        
-        bet = Accum(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[True])
+        elif self.bettype.get()=="Lucky 15 Type":
+            bet = LuckyFifteen(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]])
+
+        elif self.bettype.get()=="Yankee Type":
+            bet = Yankee(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]]) 
+
         self.totalstakes.set(bet.totalstakes())
         self.payout.set(bet.payout())
 
