@@ -37,6 +37,7 @@ class BetCalculator:
         Label(self.topframe, text="No. of Selections").grid(row=1, column=2)
 
         self.selections = StringVar()
+        self.selections.set('5')
         selectchoices = [str(i) for i in range(1,9)]
         ttk.Combobox(self.topframe, width=3, values=selectchoices, state="readonly").grid(row=1, column=3)
 
@@ -44,22 +45,27 @@ class BetCalculator:
         #----------Middle Frame
         self.midframe = Frame(master)
 
-        Label(self.midframe, text="Odds").grid(row=0, column = 0)
+        def showMidframes(rows=1):
+
+            Label(self.midframe, text="Odds").grid(row=rows, column = 0)
         
-        self.odds = StringVar()
-        Entry(self.midframe, width=5, textvariable = self.odds, justify = RIGHT).grid(row=0, column=1)
+            self.odds = StringVar()
+            Entry(self.midframe, width=5, textvariable = self.odds, justify = RIGHT).grid(row=rows, column=1)
         
-        Label(self.midframe, text="E/W Terms").grid(row = 0, column = 2)
+            Label(self.midframe, text="E/W Terms").grid(row=rows, column = 2)
 
-        self.ewterms = StringVar()
-        Entry(self.midframe, width=5, textvariable = self.ewterms, justify=RIGHT).grid(row=0, column=3)
+            self.ewterms = StringVar()
+            Entry(self.midframe, width=5, textvariable = self.ewterms, justify=RIGHT).grid(row=rows, column=3)
 
-        Label(self.midframe, text="Win?").grid(row=0, column=4)
+            Label(self.midframe, text="Win?").grid(row=rows, column=4)
 
-        self.win = StringVar()
-        winplace = ["Win", "Place"]
-        ttk.Combobox(self.midframe, width=5, values=winplace, textvariable=self.win, state="readonly").grid(row=0, column=5)
+            self.win = StringVar()
+            winplace = ["Win", "Place"]
+            ttk.Combobox(self.midframe, width=5, values=winplace, textvariable=self.win, state="readonly").grid(row=rows, column=5)
 
+        
+        for i in range(1,int(self.selections.get())+1):
+            showMidframes(rows=i)
 
         #----------Bottom Frame
         self.bottomframe = Frame(master)
