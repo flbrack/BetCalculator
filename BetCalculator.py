@@ -32,15 +32,16 @@ class BetCalculator:
         self.bettype = StringVar()
         choices = ["Single/Accum", "Lucky 15 Type", "Yankee Type"]
         self.bettype.set("Pick an option")
-        ttk.Combobox(self.topframe, width=10 ,textvariable=self.bettype, values=choices, state='readonly').grid(row=1,column=1)
+        #ttk.Combobox(self.topframe, width=10 ,textvariable=self.bettype, values=choices, state='readonly').grid(row=1,column=1)
+        OptionMenu(self.topframe, self.bettype, *choices).grid(row=1,column=1)
 
         Label(self.topframe, text="No. of Selections").grid(row=1, column=2)
 
         self.selections = StringVar()
-        self.selections.set('5')
+        self.selections.set('4')
         selectchoices = [str(i) for i in range(1,9)]
-        ttk.Combobox(self.topframe, width=3, values=selectchoices, state="readonly").grid(row=1, column=3)
-
+        #ttk.Combobox(self.topframe, width=3, values=selectchoices, state="readonly").grid(row=1, column=3)
+        OptionMenu(self.topframe,  self.selections, *selectchoices).grid(row=1, column=3)
 
         #----------Middle Frame
         self.midframe = Frame(master)
@@ -60,8 +61,9 @@ class BetCalculator:
             Label(self.midframe, text="Win?").grid(row=rows, column=4)
 
             self.win = StringVar()
+            self.win.set("Win")
             winplace = ["Win", "Place"]
-            ttk.Combobox(self.midframe, width=5, values=winplace, textvariable=self.win, state="readonly").grid(row=rows, column=5)
+            OptionMenu(self.midframe, self.win, *winplace).grid(row=rows, column=5)
 
         
         for i in range(1,int(self.selections.get())+1):
