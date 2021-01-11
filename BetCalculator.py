@@ -99,7 +99,9 @@ class BetCalculator:
         master.grid_rowconfigure(0, weight=1)
         master.grid_columnconfigure(0, weight=1)
         
-
+    def getData():
+        for widget in self.midframe.winfo_children():
+            print(widget.winfo_class())
 
     def computePayout(self):
         wins = {"Win":True,"Place":False}
