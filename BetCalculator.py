@@ -39,11 +39,13 @@ class BetCalculator:
         self.selections.set('1')
         selectchoices = [str(i) for i in range(1,9)]
 
-        def ChangeFrames(event):
+        def ChangeMidFrames(event):
+            for widget in self.midframe.winfo_children():
+                widget.destroy()
             for i in range(1,int(event)+1):
                 showMidframes(rows=i)
         
-        OptionMenu(self.topframe,  self.selections, *selectchoices, command=ChangeFrames).grid(row=1, column=3)
+        OptionMenu(self.topframe,  self.selections, *selectchoices, command=ChangeMidFrames).grid(row=1, column=3)
 
         #----------Middle Frame
         self.midframe = Frame(master)
@@ -97,8 +99,6 @@ class BetCalculator:
         master.grid_rowconfigure(0, weight=1)
         master.grid_columnconfigure(0, weight=1)
         
-        
-    #def Create Midframes(self):
 
 
     def computePayout(self):
