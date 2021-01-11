@@ -1,7 +1,5 @@
 from tkinter import *
-from tkinter import ttk
 from BetTypes import *
-
 
 
 #Create a bet calculator class
@@ -32,16 +30,20 @@ class BetCalculator:
         self.bettype = StringVar()
         choices = ["Single/Accum", "Lucky 15 Type", "Yankee Type"]
         self.bettype.set("Pick an option")
-        #ttk.Combobox(self.topframe, width=10 ,textvariable=self.bettype, values=choices, state='readonly').grid(row=1,column=1)
+
         OptionMenu(self.topframe, self.bettype, *choices).grid(row=1,column=1)
 
         Label(self.topframe, text="No. of Selections").grid(row=1, column=2)
 
         self.selections = StringVar()
-        self.selections.set('4')
+        self.selections.set('1')
         selectchoices = [str(i) for i in range(1,9)]
-        #ttk.Combobox(self.topframe, width=3, values=selectchoices, state="readonly").grid(row=1, column=3)
-        OptionMenu(self.topframe,  self.selections, *selectchoices).grid(row=1, column=3)
+
+        def ChangeFrames(event):
+            for i in range(1,int(event)+1):
+                showMidframes(rows=i)
+        
+        OptionMenu(self.topframe,  self.selections, *selectchoices, command=ChangeFrames).grid(row=1, column=3)
 
         #----------Middle Frame
         self.midframe = Frame(master)
@@ -68,6 +70,9 @@ class BetCalculator:
         
         for i in range(1,int(self.selections.get())+1):
             showMidframes(rows=i)
+        
+        
+
 
         #----------Bottom Frame
         self.bottomframe = Frame(master)
@@ -112,7 +117,7 @@ class BetCalculator:
         self.payout.set(bet.payout())
 
 
-#Step 5: Execution
+#Execution
 if __name__=='__main__':
     
     #Step 6: Create the main window of an application
