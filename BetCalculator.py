@@ -1,6 +1,6 @@
 from tkinter import *
 from BetTypes import *
-
+from functools import reduce
 
 #Create a bet calculator class
 class BetCalculator:
@@ -36,7 +36,7 @@ class BetCalculator:
         Label(self.topframe, text="No. of Selections").grid(row=1, column=2)
 
         self.selections = StringVar()
-        self.selections.set('1')
+        self.selections.set('4')
         selectchoices = [str(i) for i in range(1,9)]
 
         def ChangeMidFrames(event):
@@ -46,6 +46,10 @@ class BetCalculator:
                 showMidframes(rows=i)
         
         OptionMenu(self.topframe,  self.selections, *selectchoices, command=ChangeMidFrames).grid(row=1, column=3)
+
+        def storewin(event):
+            wins = {"Win":True,"Place":False}       
+            self.listOfWins.append(wins[event])
 
         #----------Middle Frame
         self.midframe = Frame(master)
@@ -67,13 +71,14 @@ class BetCalculator:
             self.win = StringVar()
             self.win.set("Win")
             winplace = ["Win", "Place"]
-            OptionMenu(self.midframe, self.win, *winplace).grid(row=rows, column=5)
+            OptionMenu(self.midframe, self.win, *winplace, command=storewin).grid(row=rows, column=5)
 
         
         for i in range(1,int(self.selections.get())+1):
             showMidframes(rows=i)
         
         
+
 
 
         #----------Bottom Frame
@@ -99,24 +104,36 @@ class BetCalculator:
         master.grid_rowconfigure(0, weight=1)
         master.grid_columnconfigure(0, weight=1)
         
-    def getData():
-        for widget in self.midframe.winfo_children():
-            print(widget.winfo_class())
+        self.listOfOdds = []
+        self.listOfEWTerms = []
+        self.listOfWins = [True]
+        
 
     def computePayout(self):
-        wins = {"Win":True,"Place":False}
+        
+        i=0
+        for widget in self.midframe.winfo_children():
+            if widget.winfo_class() == 'Entry' and i%2==0:
+                self.listOfOdds.append(widget.get())
+                i+=1
+            elif widget.winfo_class() == 'Entry' and i%2==1:
+                self.listOfEWTerms.append(widget.get())
+                i+=1
 
+        self.listOfOdds = [reduce(lambda x,y:x/y, list(map(float,item.split('/')))) for item in self.listOfOdds]
+        self.listOfEWTerms = [reduce(lambda x,y:x/y, list(map(float,item.split('/')))) for item in self.listOfEWTerms]      
+        
         if self.bettype.get()=="Single/Accum":
-            bet = Accum(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]])
+            bet = Accum(stakes = float(self.stakeinput.get()), odds=self.listOfOdds, ew=self.ewinput.get(), ewterms=self.listOfEWTerms, winner=self.listOfWins)
         
         elif self.bettype.get()=="Lucky 15 Type":
-            bet = LuckyFifteen(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]])
+            bet = LuckyFifteen(stakes = float(self.stakeinput.get()), odds=self.listOfOdds, ew=self.ewinput.get(), ewterms=self.listOfEWTerms ,winner=self.listOfWins)
 
         elif self.bettype.get()=="Yankee Type":
-            bet = Yankee(stakes = float(self.stakeinput.get()), odds=[float(self.odds.get())], ew=self.ewinput.get(), ewterms=[float(self.ewterms.get())],winner=[wins[self.win.get()]]) 
+            bet = Yankee(stakes = float(self.stakeinput.get()), odds=self.listOfOdds, ew=self.ewinput.get(), ewterms=self.listOfEWTerms,winner=self.listOfWins) 
 
         self.totalstakes.set(bet.totalstakes())
-        self.payout.set(bet.payout())
+        self.payout.set(round(bet.payout(),2))
 
 
 #Execution
